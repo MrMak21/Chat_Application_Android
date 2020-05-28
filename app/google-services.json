@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "466589027255",
+    "firebase_url": "https://chatapp-acaad.firebaseio.com",
+    "project_id": "chatapp-acaad",
+    "storage_bucket": "chatapp-acaad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466589027255:android:c153f4c7d1b2390c9f7632",
+        "android_client_info": {
+          "package_name": "gr.makris.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "466589027255-t3drcpjfr15lhbhrcj7jejgaeesldq2h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "gr.makris.chatapp",
+            "certificate_hash": "6ad9cb492c05ab68821df22d576ada32cbe5c999"
+          }
+        },
+        {
+          "client_id": "466589027255-c7e93d9l8oog6unab4uttop3i6b6430b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsA_1w2O9vN35HwXgWx_yuOIoEcNd-hG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "466589027255-c7e93d9l8oog6unab4uttop3i6b6430b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
