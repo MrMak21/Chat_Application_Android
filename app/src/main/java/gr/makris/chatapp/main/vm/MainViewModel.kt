@@ -24,7 +24,7 @@ class MainViewModel(app: Application): AndroidViewModel(app),IMainViewModel {
 
     override fun send() {
 
-        var user = User(UUID.randomUUID().toString(),"Stavros","Megremis","meg@gmail.com")
+        var user = User(UUID.randomUUID().toString(),"Panos","Makris","panosmak37@gmail.com")
         ref.child(user.id).setValue(user)
     }
 
@@ -50,6 +50,7 @@ class MainViewModel(app: Application): AndroidViewModel(app),IMainViewModel {
         })
 
     }
+
 
     override fun itemClicked(user: User) {
         Log.d(TAG,user.email)

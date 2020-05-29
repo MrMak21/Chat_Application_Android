@@ -54,11 +54,21 @@ class LoginScreen : AppCompatActivity() {
     private fun loginResponse(success: Boolean) {
         if (success) {
             val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
             startActivity(intent)
+            finish()
         } else {
             //Cannot login
             Toast.makeText(this,"Cannot connect",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (vm.checkIfUserSignIn()) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }
