@@ -29,7 +29,7 @@ class MainViewModel(app: Application): AndroidViewModel(app),IMainViewModel {
     }
 
     override fun getUsers() {
-        var list = arrayListOf<User>()
+        val list = arrayListOf<User>()
         namesListObserver.value = list
 
         ref.addValueEventListener(object: ValueEventListener {

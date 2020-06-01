@@ -3,7 +3,10 @@ package gr.makris.chatapp.chat.vm
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import gr.makris.chatapp.data.Message
 import gr.makris.chatapp.data.User
 import java.util.*
@@ -14,19 +17,56 @@ class ChatViewModel(app: Application): AndroidViewModel(app),IChatViewModel {
     private var db = FirebaseDatabase.getInstance()
     private var ref = db.getReference("Messages")
 
-    override var messagesListObserver: MutableLiveData<ArrayList<User>> = MutableLiveData<ArrayList<User>>()
+    override var guestId: String? = null
+    override var userId: String? = null
+
+    override var messagesListObserver: MutableLiveData<ArrayList<Message>> = MutableLiveData<ArrayList<Message>>()
 
     override fun setMessageHistory() {
+        val list = arrayListOf<Message>()
+        messagesListObserver.value = list
 
+        ref.addValueEventListener(object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                list.clear()
+                for (chat in p0.children) {
+                    val chatId1 = "${userId}_${guestId}"
+                    val chatId2 = "${guestId}_${userId}"
+                    if (chat.key.equals(chatId1) || chat.key.equals(chatId2)) {
+                        for (msg in chat.children) {
+                            val message = msg.getValue(Message::class.java)
+                            message?.let { list.add(it) }
+                        }
+                    }
+                }
+                //notify chatScreen that has new messages
+                messagesListObserver.value = list
+            }
+        })
     }
 
-    override fun sendMessageToServer(receipientUser: User) {
-        val chat_id = "b972119a-891c-4542-a211-b78d129bd5f6_" + receipientUser.id
+    override fun sendMessageToServer(msg: String, recipientUser: User) {
+        var chat_id = ""
+        if (userId!! > recipientUser.id) {
+            chat_id = "${userId}_${recipientUser.id}"
+        } else {
+            chat_id = "${recipientUser.id}_${userId}"
+        }
         val tsLong = System.currentTimeMillis() / 1000
         val ts = tsLong.toString()
-        var msg = Message(UUID.randomUUID().toString(),"b972119a-891c-4542-a211-b78d129bd5f6",receipientUser.id,"TEXT","First message on firebase",chat_id,ts)
+        var message = Message(UUID.randomUUID().toString(),userId,recipientUser.id,"TEXT",msg,chat_id,ts)
 
-        ref.child(chat_id).child(msg.msgId).setValue(msg)
+        ref.child(chat_id).child(message.msgId).setValue(message)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        guestId = null
+        userId = null
     }
 
 
