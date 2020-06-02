@@ -106,7 +106,7 @@ class MessageAdapter(application: Context) : RecyclerView.Adapter<MessageAdapter
             if (DateUtils.isToday(s.toLong() * 1000)) {
                 sdf = SimpleDateFormat("HH:mm")
             }
-            if (DateUtils.isToday((s.toLong() + DateUtils.DAY_IN_MILLIS) * 1000)) {
+            if (DateUtils.isToday((s.toLong() * 1000) + DateUtils.DAY_IN_MILLIS)) {
                 sdf = SimpleDateFormat("HH:mm")
                 return "Yesterday " + sdf.format(netDate)
             }

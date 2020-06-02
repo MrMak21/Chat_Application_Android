@@ -68,6 +68,7 @@ class ChatScreen : AppCompatActivity() {
         recycler.adapter = adapter
         adapter.setOnItemClickListener { /*vm.itemClicked(it)*/ }
 
+
     }
 
     private fun setUpListeners() {
@@ -84,6 +85,7 @@ class ChatScreen : AppCompatActivity() {
             Log.d(TAG,it.toString())
             it.sortBy { it.timestamp }
             adapter.setData(it)
+            recycler.scrollToPosition(it.size - 1)
         })
     }
 
