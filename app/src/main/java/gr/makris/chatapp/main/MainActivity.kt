@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import gr.makris.chatapp.R
 import gr.makris.chatapp.chat.ChatScreen
+import gr.makris.chatapp.login.LoginScreen
 import gr.makris.chatapp.login.vm.LoginViewModel
 import gr.makris.chatapp.main.adapter.NamesListAdapter
 import gr.makris.chatapp.main.vm.MainViewModel
@@ -21,9 +22,10 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private lateinit var vm: MainViewModel
 
-    private lateinit var mButton: Button
+    private lateinit var logoutBtn: Button
     private lateinit var mRecycler: RecyclerView
     private lateinit var adapter: NamesListAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpBindings() {
-        mButton = findViewById(R.id.testButton)
+        logoutBtn = findViewById(R.id.logoutBtn)
         mRecycler = findViewById(R.id.mainRecycler)
         mRecycler.layoutManager = LinearLayoutManager(this)
 
@@ -50,8 +52,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpListeners() {
-        testButton.setOnClickListener { it ->
-            vm.send()
+        logoutBtn.setOnClickListener { it ->
+            vm.logOut()
         }
     }
 
@@ -66,6 +68,14 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this,ChatScreen::class.java)
             intent.putExtra("user",it)
             startActivity(intent)
+        })
+
+        vm.logoutObserver.observe(this, Observer { it ->
+            if (!it.hasError) {
+                val intent = Intent(this,LoginScreen::class.java)
+                startActivity(intent)
+                finish()
+            }
         })
     }
 }
