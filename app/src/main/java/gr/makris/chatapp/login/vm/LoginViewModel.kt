@@ -26,7 +26,7 @@ class LoginViewModel(app: Application): AndroidViewModel(app),ILoginViewModel,Lo
 
 
 
-    override var signInObserver: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    override var loginResult: MutableLiveData<Result<Unit>> = MutableLiveData()
 
 
 
@@ -36,11 +36,11 @@ class LoginViewModel(app: Application): AndroidViewModel(app),ILoginViewModel,Lo
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG,"Login success - User: " + mAuth.currentUser!!.email)
-                    signInObserver.value = true
+                    loginResult.value = Result.success()
                     getUserByEmail(email)
                 } else {
                     Log.d(TAG,"Login failed")
-                    signInObserver.value = false
+                    loginResult.value = Result.failure(task.exception as Throwable)
                 }
             }
     }
@@ -83,6 +83,9 @@ class LoginViewModel(app: Application): AndroidViewModel(app),ILoginViewModel,Lo
         val editor = SharedPrefsUtils.getPrefsEditor(app)
         editor?.putString(SharedPrefsUtils.USER_EMAIL,user.email)
         editor?.putString(SharedPrefsUtils.USER_ID,user.id)
+        editor?.putString(SharedPrefsUtils.USER_FULLNAME,"${user.firstname} ${user.lastname}")
+        editor?.putString(SharedPrefsUtils.USER_FIRSTNAME,user.firstname)
+        editor?.putString(SharedPrefsUtils.USER_LASTNAME,user.lastname)
         editor?.commit()
     }
 

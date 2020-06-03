@@ -44,8 +44,15 @@ class LoginScreen : AppCompatActivity() {
 
     private fun setUpObservers() {
         //Return the response from signIn
-        vm.signInObserver.observe(this, Observer { it ->
-            loginResponse(it)
+
+        vm.loginResult.observe(this, Observer { it ->
+            if (it.hasError) {
+                Toast.makeText(this,it.errorMessage,Toast.LENGTH_SHORT).show()
+            } else {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         })
     }
 
@@ -60,16 +67,6 @@ class LoginScreen : AppCompatActivity() {
         }
     }
 
-    private fun loginResponse(success: Boolean) {
-        if (success) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        } else {
-            //Cannot login
-            Toast.makeText(this,"Cannot connect",Toast.LENGTH_SHORT).show()
-        }
-    }
 
     override fun onStart() {
         super.onStart()

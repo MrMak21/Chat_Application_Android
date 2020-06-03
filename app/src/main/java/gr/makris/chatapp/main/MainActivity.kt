@@ -4,6 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.InflateException
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -11,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import gr.makris.chatapp.R
 import gr.makris.chatapp.chat.ChatScreen
+import gr.makris.chatapp.info.InfoScreen
 import gr.makris.chatapp.login.LoginScreen
 import gr.makris.chatapp.login.vm.LoginViewModel
 import gr.makris.chatapp.main.adapter.NamesListAdapter
@@ -46,15 +50,13 @@ class MainActivity : AppCompatActivity() {
         mRecycler = findViewById(R.id.mainRecycler)
         mRecycler.layoutManager = LinearLayoutManager(this)
 
-        adapter = NamesListAdapter()
+        adapter = NamesListAdapter(this)
         mRecycler.adapter = adapter
         adapter.setOnItemClickListener { vm.itemClicked(it) }
     }
 
     private fun setUpListeners() {
-        logoutBtn.setOnClickListener { it ->
-            vm.logOut()
-        }
+
     }
 
     private fun setUpObservers() {
@@ -70,12 +72,21 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         })
 
-        vm.logoutObserver.observe(this, Observer { it ->
-            if (!it.hasError) {
-                val intent = Intent(this,LoginScreen::class.java)
-                startActivity(intent)
-                finish()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+                R.id.menu_info -> {
+                val intent = Intent(this, InfoScreen::class.java)
+                    startActivity(intent)
+                true
             }
-        })
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

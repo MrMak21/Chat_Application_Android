@@ -1,5 +1,6 @@
 package gr.makris.chatapp.main.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -10,12 +11,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import gr.makris.chatapp.R
 import gr.makris.chatapp.data.User
+import gr.makris.chatapp.utils.SharedPrefsUtils
 
 
-class NamesListAdapter: RecyclerView.Adapter<NamesListAdapter.ContentViewHolder>() {
+class NamesListAdapter(application: Context): RecyclerView.Adapter<NamesListAdapter.ContentViewHolder>() {
 
+    private val app = application
     private var namesList = mutableListOf<User>()
     private var listener: ((User) -> Unit)? = null
+    private val userId: String?
+
+    init {
+        val prefs = SharedPrefsUtils.getPrefs(app)
+        userId = prefs?.getString(SharedPrefsUtils.USER_ID,null)
+    }
 
     fun setOnItemClickListener(listener: ((User) -> Unit)) {
         this.listener = listener
@@ -39,8 +48,12 @@ class NamesListAdapter: RecyclerView.Adapter<NamesListAdapter.ContentViewHolder>
     }
 
     override fun onBindViewHolder(holder: NamesListAdapter.ContentViewHolder, position: Int) {
-        holder.name.text = namesList[position].firstname + " " + namesList[position].lastname
+        holder.name.text = "${namesList[position].firstname} ${namesList[position].lastname}"
         holder.msg.text = namesList[position].id
+
+        if (namesList[position].id.equals(userId)) {
+            holder.name.text = "Just you"
+        }
 
         holder.itemView.setOnClickListener { it ->
             itemClicked(position)

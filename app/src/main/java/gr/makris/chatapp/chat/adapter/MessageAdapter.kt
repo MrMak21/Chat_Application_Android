@@ -55,7 +55,6 @@ class MessageAdapter(application: Context) : RecyclerView.Adapter<MessageAdapter
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
 
 
-
         if (messagesList[position].senderId.equals(userId)) {
             holder.recipientView.visibility = View.GONE
             holder.senderView.visibility = View.VISIBLE

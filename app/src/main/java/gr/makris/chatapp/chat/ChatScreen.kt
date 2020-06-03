@@ -1,8 +1,10 @@
 package gr.makris.chatapp.chat
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -25,7 +27,6 @@ class ChatScreen : AppCompatActivity() {
     private val TAG = "ChatScreen"
     private lateinit var vm: ChatViewModel
 
-    private lateinit var recipientName: TextView
     private lateinit var chatInput: EditText
     private lateinit var guestUserData: User
     private lateinit var sendButton: ImageButton
@@ -40,8 +41,9 @@ class ChatScreen : AppCompatActivity() {
         vm = ViewModelProvider(this).get(ChatViewModel::class.java)
 
         guestUserData = intent.getParcelableExtra<User>("user")
-        Log.d(TAG,guestUserData.email)
+        Log.d(TAG, guestUserData.email)
 
+        setupActionBar()
         setUpBindings()
         setUpListeners()
         setUpObservers()
@@ -50,14 +52,17 @@ class ChatScreen : AppCompatActivity() {
         vm.setMessageHistory()
     }
 
+    private fun setupActionBar() {
+        title = "${guestUserData.firstname} ${guestUserData.lastname}"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
     private fun setUpBindings() {
-        recipientName = findViewById(R.id.chatName)
         chatInput = findViewById(R.id.chatInput)
-        recipientName.text = ("${guestUserData.firstname} ${guestUserData.lastname}")
         sendButton = findViewById(R.id.sendMessageBtn)
 
         val prefs = SharedPrefsUtils.getPrefs(this)
-        vm.userId = prefs?.getString(SharedPrefsUtils.USER_ID,null)
+        vm.userId = prefs?.getString(SharedPrefsUtils.USER_ID, null)
         vm.guestId = guestUserData.id
 
 
@@ -74,7 +79,7 @@ class ChatScreen : AppCompatActivity() {
     private fun setUpListeners() {
         sendButton.setOnClickListener { it ->
             if (chatInput.text.toString().isNotEmpty()) {
-                vm.sendMessageToServer(chatInput.text.toString(),guestUserData)
+                vm.sendMessageToServer(chatInput.text.toString(), guestUserData)
                 chatInput.setText("")
             }
         }
@@ -82,11 +87,26 @@ class ChatScreen : AppCompatActivity() {
 
     private fun setUpObservers() {
         vm.messagesListObserver.observe(this, Observer { it ->
-            Log.d(TAG,it.toString())
+            Log.d(TAG, it.toString())
             it.sortBy { it.timestamp }
             adapter.setData(it)
             recycler.scrollToPosition(it.size - 1)
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 
 }

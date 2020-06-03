@@ -24,7 +24,7 @@ class MainViewModel(app: Application): AndroidViewModel(app),IMainViewModel {
 
     override var namesListObserver: MutableLiveData<ArrayList<User>> = MutableLiveData<ArrayList<User>>()
     override var mainScreenCommand: MutableLiveData<User> = MutableLiveData()
-    override var logoutObserver: MutableLiveData<Result<Unit>> = MutableLiveData()
+
 
 
     override fun getUsers() {
@@ -56,10 +56,6 @@ class MainViewModel(app: Application): AndroidViewModel(app),IMainViewModel {
         mainScreenCommand.value = user
     }
 
-    override fun logOut() {
-        mAuth.signOut()
-        logoutObserver.value = Result.success()
-    }
 
 
 }

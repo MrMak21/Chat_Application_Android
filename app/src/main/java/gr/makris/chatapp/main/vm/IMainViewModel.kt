@@ -10,10 +10,10 @@ interface IMainViewModel {
 
     var namesListObserver: MutableLiveData<ArrayList<User>>
     var mainScreenCommand: MutableLiveData<User>
-    var logoutObserver: MutableLiveData<Result<Unit>>
+
 
 
     fun getUsers()
     fun itemClicked(user: User)
-    fun logOut()
+
 }

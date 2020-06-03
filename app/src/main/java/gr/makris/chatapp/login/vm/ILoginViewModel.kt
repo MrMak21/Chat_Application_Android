@@ -7,7 +7,9 @@ import gr.makris.chatapp.result.Result
 
 interface ILoginViewModel {
 
-    var signInObserver: MutableLiveData<Boolean>
+
+    var loginResult: MutableLiveData<Result<Unit>>
+
     fun doLogin(email: String, pass: String)
     fun checkIfUserSignIn(): Boolean
     fun getUserByEmail(email: String)
