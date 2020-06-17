@@ -52,6 +52,17 @@ class InfoScreen : AppCompatActivity() {
         setUpBindings()
         setUpListeners()
         setUpObservers()
+
+        setProfilePicture()
+    }
+
+    private fun setProfilePicture() {
+        val img = prefs?.getString(SharedPrefsUtils.USER_IMAGE_THUMB,"")
+        val uri = Uri.parse(img)
+
+        if (uri != null) {
+            image.setImageURI(uri)
+        }
     }
 
 

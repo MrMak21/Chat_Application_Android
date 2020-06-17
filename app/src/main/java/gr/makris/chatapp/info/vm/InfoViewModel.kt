@@ -19,6 +19,8 @@ import gr.makris.chatapp.result.Result
 import gr.makris.chatapp.utils.SharedPrefsUtils
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 
 class InfoViewModel(application: Application): AndroidViewModel(application),IInfoViewModel {
@@ -40,6 +42,8 @@ class InfoViewModel(application: Application): AndroidViewModel(application),IIn
     override fun logOut() {
         mAuth.signOut()
         logoutObserver.value = Result.success()
+        prefs?.edit()?.remove(SharedPrefsUtils.USER_IMAGE)?.apply()
+        prefs?.edit()?.remove(SharedPrefsUtils.USER_IMAGE_THUMB)?.apply()
     }
 
     override fun uploadFileToServer(file: File): Result<Unit> {
@@ -75,15 +79,29 @@ class InfoViewModel(application: Application): AndroidViewModel(application),IIn
     }
 
     private fun notifyPhotoChanged(file: File,downloadUri: Uri?) {
+
+        usersRef.child(prefs?.getString(SharedPrefsUtils.USER_ID,"")!!).child("image").setValue(downloadUri.toString())
+        usersRef.child(prefs?.getString(SharedPrefsUtils.USER_ID,"")!!).child("imageThumb").setValue(downloadUri.toString())
+
+        val result = saveImageInFilesDirectory(file)
+        if (result.hasError) {
+            return
+        }
+
         val editor = prefs?.edit()
-        editor?.putString(SharedPrefsUtils.USER_IMAGE,Uri.fromFile(file).toString())
-        editor?.putString(SharedPrefsUtils.USER_IMAGE_THUMB,Uri.fromFile(file).toString())
+        editor?.putString(SharedPrefsUtils.USER_IMAGE,result.value.toString())
+        editor?.putString(SharedPrefsUtils.USER_IMAGE_THUMB,result.value.toString())
         editor?.apply()
+    }
 
-        //TODO make the implementation so the user have imageUrl and imageThumbUrl
-        // so i can put the image there
-//        usersRef.child(prefs?.getString(SharedPrefsUtils.USER_ID,"")!!).child("email").setValue("")
-
+    private fun saveImageInFilesDirectory(file: File): Result<Uri> {
+        val stream = file.inputStream()
+        val saveFile = File(app.filesDir,file.name)
+        val result =  copyInputStreamToFile(stream,saveFile)
+        if (result.hasError) {
+            return Result.failure(result.error)
+        }
+        return Result.success(Uri.fromFile(result.value))
     }
 
     fun getImageUri(inContext: Context, inImage: Bitmap,name:String): Uri? {
@@ -91,5 +109,17 @@ class InfoViewModel(application: Application): AndroidViewModel(application),IIn
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, name, null)
         return Uri.parse(path)
+    }
+
+    private fun copyInputStreamToFile(inputStream: InputStream, file: File): Result<File> {
+        return try {
+            file.outputStream().use { fileOut ->
+                inputStream.copyTo(fileOut)
+            }
+            Result.success(file)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e.message.toString())
+        }
     }
 }

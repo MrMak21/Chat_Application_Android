@@ -9,12 +9,24 @@ public class User implements Parcelable {
     public String firstname;
     public String lastname;
     public String email;
+    public String image;
+    public String imageThumb;
+
 
     public User(String id, String firstname, String lastname, String email) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
+    }
+
+    public User(String id, String firstname, String lastname, String email, String image, String imageThumb) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.image = image;
+        this.imageThumb = imageThumb;
     }
 
     public User() {

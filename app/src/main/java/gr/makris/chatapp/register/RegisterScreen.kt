@@ -85,7 +85,9 @@ class RegisterScreen : AppCompatActivity() {
                 val user = User(UUID.randomUUID().toString()
                     ,firstNameInput.editText?.text.toString()
                     ,lastNameInput.editText?.text.toString()
-                    ,emailInput.editText?.text.toString())
+                    ,emailInput.editText?.text.toString()
+                    ,""
+                    ,"")
                 vm.doRegister(user,password1.editText?.text.toString())
             } else {
                 Toast.makeText(this,"Passwords does not match",Toast.LENGTH_SHORT).show()

@@ -1,13 +1,17 @@
 package gr.makris.chatapp.main.adapter
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.switchmaterial.SwitchMaterial
 import gr.makris.chatapp.R
 import gr.makris.chatapp.data.User
@@ -20,6 +24,7 @@ class NamesListAdapter(application: Context): RecyclerView.Adapter<NamesListAdap
     private var namesList = mutableListOf<User>()
     private var listener: ((User) -> Unit)? = null
     private val userId: String?
+    private var prefs: SharedPreferences? = SharedPrefsUtils.getPrefs(app)
 
     init {
         val prefs = SharedPrefsUtils.getPrefs(app)
@@ -50,9 +55,19 @@ class NamesListAdapter(application: Context): RecyclerView.Adapter<NamesListAdap
     override fun onBindViewHolder(holder: NamesListAdapter.ContentViewHolder, position: Int) {
         holder.name.text = "${namesList[position].firstname} ${namesList[position].lastname}"
         holder.msg.text = namesList[position].id
+        //set user image else set default
+        if (!namesList[position].imageThumb.isNullOrEmpty()) {
+            Glide.with(app)
+                .load(namesList[position].imageThumb)
+                .into(holder.userImage)
+        }
+
 
         if (namesList[position].id.equals(userId)) {
             holder.name.text = "Just you"
+            val img = prefs?.getString(SharedPrefsUtils.USER_IMAGE_THUMB,"")
+            val uri = Uri.parse(img)
+            holder.userImage.setImageURI(uri)
         }
 
         holder.itemView.setOnClickListener { it ->
@@ -68,6 +83,7 @@ class NamesListAdapter(application: Context): RecyclerView.Adapter<NamesListAdap
 
         val name = itemView.findViewById<TextView>(R.id.main_recycler_name)
         val msg = itemView.findViewById<TextView>(R.id.main_recycler_msg)
+        val userImage = itemView.findViewById<ImageView>(R.id.main_recycler_userImage)
 
     }
 

@@ -72,4 +72,7 @@ dependencies {
 
     //IMAGE PICKER
     implementation 'com.github.jkwiecien:EasyImage:3.0.4'
+
+    //GLIDE
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
 }
