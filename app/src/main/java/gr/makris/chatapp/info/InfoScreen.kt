@@ -109,6 +109,7 @@ class InfoScreen : AppCompatActivity() {
         easyImage.handleActivityResult(requestCode,resultCode,data,this,object: DefaultCallback() {
             override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                 image.setImageURI(Uri.fromFile(imageFiles[0].file))
+                vm.uploadFileToServer(imageFiles[0].file)
             }
         })
     }
