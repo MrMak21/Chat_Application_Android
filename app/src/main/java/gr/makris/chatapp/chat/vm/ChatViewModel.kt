@@ -24,7 +24,7 @@ class ChatViewModel(app: Application): AndroidViewModel(app),IChatViewModel {
 
     override fun setMessageHistory() {
         val list = arrayListOf<Message>()
-        messagesListObserver.value = list
+//        messagesListObserver.value = list
 
         ref.addValueEventListener(object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {

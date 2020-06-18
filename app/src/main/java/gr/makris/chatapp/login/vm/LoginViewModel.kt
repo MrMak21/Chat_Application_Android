@@ -86,6 +86,8 @@ class LoginViewModel(app: Application): AndroidViewModel(app),ILoginViewModel,Lo
         editor?.putString(SharedPrefsUtils.USER_FULLNAME,"${user.firstname} ${user.lastname}")
         editor?.putString(SharedPrefsUtils.USER_FIRSTNAME,user.firstname)
         editor?.putString(SharedPrefsUtils.USER_LASTNAME,user.lastname)
+        editor?.putString(SharedPrefsUtils.USER_IMAGE,user.image)
+        editor?.putString(SharedPrefsUtils.USER_IMAGE_THUMB,user.imageThumb)
         editor?.commit()
     }
 

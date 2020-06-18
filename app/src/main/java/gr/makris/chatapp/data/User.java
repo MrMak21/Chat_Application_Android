@@ -37,6 +37,8 @@ public class User implements Parcelable {
         firstname = in.readString();
         lastname = in.readString();
         email = in.readString();
+        image = in.readString();
+        imageThumb = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -63,5 +65,7 @@ public class User implements Parcelable {
         dest.writeString(firstname);
         dest.writeString(lastname);
         dest.writeString(email);
+        dest.writeString(image);
+        dest.writeString(imageThumb);
     }
 }

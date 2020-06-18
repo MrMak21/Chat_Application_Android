@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import gr.makris.chatapp.R
 import gr.makris.chatapp.info.vm.InfoViewModel
 import gr.makris.chatapp.login.LoginScreen
@@ -61,7 +62,10 @@ class InfoScreen : AppCompatActivity() {
         val uri = Uri.parse(img)
 
         if (uri != null) {
-            image.setImageURI(uri)
+//            image.setImageURI(uri)
+            Glide.with(this)
+                .load(uri)
+                .into(image)
         }
     }
 

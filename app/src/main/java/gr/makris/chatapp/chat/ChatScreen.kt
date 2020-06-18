@@ -1,14 +1,13 @@
 package gr.makris.chatapp.chat
 
 import android.graphics.Color
+import android.media.tv.TvContract
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
+import android.view.View
+import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,6 +32,7 @@ class ChatScreen : AppCompatActivity() {
 
     private lateinit var adapter: MessageAdapter
     private lateinit var recycler: RecyclerView
+    private lateinit var mProgress: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +50,7 @@ class ChatScreen : AppCompatActivity() {
 
         //Show the past messages
         vm.setMessageHistory()
+        mProgress.visibility = View.VISIBLE
     }
 
     private fun setupActionBar() {
@@ -60,10 +61,15 @@ class ChatScreen : AppCompatActivity() {
     private fun setUpBindings() {
         chatInput = findViewById(R.id.chatInput)
         sendButton = findViewById(R.id.sendMessageBtn)
+        mProgress = findViewById(R.id.chat_progress_bar)
 
         val prefs = SharedPrefsUtils.getPrefs(this)
         vm.userId = prefs?.getString(SharedPrefsUtils.USER_ID, null)
         vm.guestId = guestUserData.id
+
+        val editor = prefs?.edit()
+        editor?.putString(SharedPrefsUtils.CHAT_RECIPIENT_IMAGE,guestUserData.imageThumb)
+        editor?.apply()
 
 
         recycler = findViewById(R.id.chatRecyler)
@@ -91,6 +97,7 @@ class ChatScreen : AppCompatActivity() {
             it.sortBy { it.timestamp }
             adapter.setData(it)
             recycler.scrollToPosition(it.size - 1)
+            mProgress.visibility = View.GONE
         })
     }
 

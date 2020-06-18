@@ -24,6 +24,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="name"
+        android:textColor="@color/textblack"
+        android:textSize="16dp"
+        android:layout_marginTop="4dp"
         android:layout_marginStart="36dp"/>
 
     <TextView
@@ -33,7 +36,8 @@
         app:layout_constraintTop_toBottomOf="@id/main_recycler_name"
         app:layout_constraintStart_toStartOf="@id/main_recycler_name"
         tools:text="last msg"
-        android:layout_marginTop="4dp"/>
+        android:textSize="12dp"
+        />
 
     <View
         android:id="@+id/spaceLine"

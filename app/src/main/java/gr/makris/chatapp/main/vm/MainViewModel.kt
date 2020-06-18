@@ -10,6 +10,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import gr.makris.chatapp.data.Message
 import gr.makris.chatapp.data.User
 import gr.makris.chatapp.result.Result
 import java.util.*
@@ -20,6 +21,7 @@ class MainViewModel(app: Application): AndroidViewModel(app),IMainViewModel {
     private val TAG = "MainViewModel"
     private var db = FirebaseDatabase.getInstance()
     private var ref = db.getReference("Users")
+    private val msgRef = db.getReference("Messages")
     private val mAuth = FirebaseAuth.getInstance()
 
     override var namesListObserver: MutableLiveData<ArrayList<User>> = MutableLiveData<ArrayList<User>>()
@@ -29,7 +31,7 @@ class MainViewModel(app: Application): AndroidViewModel(app),IMainViewModel {
 
     override fun getUsers() {
         val list = arrayListOf<User>()
-        namesListObserver.value = list
+//        namesListObserver.value = list
 
         ref.addValueEventListener(object: ValueEventListener {
 
@@ -49,6 +51,26 @@ class MainViewModel(app: Application): AndroidViewModel(app),IMainViewModel {
         })
 
     }
+
+//    override fun getLastMessages() {
+//        val list = arrayListOf<Message>()
+//        msgRef.addValueEventListener(object: ValueEventListener {
+//            override fun onCancelled(p0: DatabaseError) {
+//
+//            }
+//
+//            override fun onDataChange(p0: DataSnapshot) {
+//                list.clear()
+//                for (i in p0.children) {
+//                    val msg = i.getValue(Message::class.java)!!
+//                    list.add(msg)
+//                }
+//
+//                namesListObserver.value = list
+//            }
+//        })
+//
+//    }
 
 
     override fun itemClicked(user: User) {

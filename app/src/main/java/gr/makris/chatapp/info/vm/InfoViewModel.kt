@@ -69,7 +69,7 @@ class InfoViewModel(application: Application): AndroidViewModel(application),IIn
     }
 
     private fun findImage(filename: String,file: File) {
-        //Find and give the image's downloadUrl so it can be uploaded
+        //Find and give the image's downloadUrl so it can be uploaded to the users database
         val reference = imagesRef.child(filename)
         var downloadTask = reference.downloadUrl
         downloadTask.addOnCompleteListener { url ->

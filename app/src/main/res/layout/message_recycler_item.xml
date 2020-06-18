@@ -7,12 +7,25 @@
     android:paddingBottom="8dp"
     >
 
+    <ImageView
+        android:id="@+id/chat_userImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_account_circle_black_24dp"
+        app:layout_constraintTop_toTopOf="@id/recipientCardView"
+        app:layout_constraintBottom_toBottomOf="@id/recipientCardView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/recipientCardView"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"/>
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/recipientCardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="50dp"
         app:cardElevation="2dp"
         >
 

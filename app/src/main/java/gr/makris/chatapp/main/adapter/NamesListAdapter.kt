@@ -67,7 +67,10 @@ class NamesListAdapter(application: Context): RecyclerView.Adapter<NamesListAdap
             holder.name.text = "Just you"
             val img = prefs?.getString(SharedPrefsUtils.USER_IMAGE_THUMB,"")
             val uri = Uri.parse(img)
-            holder.userImage.setImageURI(uri)
+//            holder.userImage.setImageURI(uri)
+            Glide.with(app)
+                .load(uri)
+                .into(holder.userImage)
         }
 
         holder.itemView.setOnClickListener { it ->
@@ -76,7 +79,14 @@ class NamesListAdapter(application: Context): RecyclerView.Adapter<NamesListAdap
     }
 //
     private fun itemClicked(position :Int) {
-        listener?.invoke(User(namesList[position].id,namesList[position].firstname,namesList[position].lastname,namesList[position].email))
+        listener?.invoke(User(
+            namesList[position].id,
+            namesList[position].firstname,
+            namesList[position].lastname,
+            namesList[position].email,
+            namesList[position].image,
+            namesList[position].imageThumb)
+        )
     }
 
     inner class ContentViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -85,6 +95,10 @@ class NamesListAdapter(application: Context): RecyclerView.Adapter<NamesListAdap
         val msg = itemView.findViewById<TextView>(R.id.main_recycler_msg)
         val userImage = itemView.findViewById<ImageView>(R.id.main_recycler_userImage)
 
+    }
+
+    fun clear() {
+        namesList.clear()
     }
 
 

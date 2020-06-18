@@ -14,6 +14,7 @@ interface IMainViewModel {
 
 
     fun getUsers()
+//    fun getLastMessages()
     fun itemClicked(user: User)
 
 }

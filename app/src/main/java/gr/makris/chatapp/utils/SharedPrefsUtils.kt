@@ -15,6 +15,7 @@ object SharedPrefsUtils {
     val USER_LASTNAME = "userLastname"
     val USER_IMAGE = "userImage"
     val USER_IMAGE_THUMB = "userImageThumb"
+    val CHAT_RECIPIENT_IMAGE = "chatRecipientImage"
 
     fun getPrefsEditor(app: Context): SharedPreferences.Editor? {
         val prefs = app.getSharedPreferences(PREFERENCES,0)

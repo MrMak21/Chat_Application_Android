@@ -7,11 +7,14 @@ import android.util.Log
 import android.view.InflateException
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import gr.makris.chatapp.R
 import gr.makris.chatapp.chat.ChatScreen
 import gr.makris.chatapp.info.InfoScreen
@@ -29,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var logoutBtn: Button
     private lateinit var mRecycler: RecyclerView
     private lateinit var adapter: NamesListAdapter
+    private lateinit var mProgress: ProgressBar
+    private lateinit var mRefresh: SwipeRefreshLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,19 +45,34 @@ class MainActivity : AppCompatActivity() {
         vm.getUsers()
 
 
+
+
         setUpBindings()
         setUpListeners()
         setUpObservers()
+
+        mProgress.visibility = View.VISIBLE
     }
 
     private fun setUpBindings() {
         logoutBtn = findViewById(R.id.logoutBtn)
+        mProgress = findViewById(R.id.main_progress_bar)
+        mRefresh = findViewById(R.id.refreshContainer)
         mRecycler = findViewById(R.id.mainRecycler)
         mRecycler.layoutManager = LinearLayoutManager(this)
 
         adapter = NamesListAdapter(this)
         mRecycler.adapter = adapter
         adapter.setOnItemClickListener { vm.itemClicked(it) }
+
+
+        //refresh users list
+        mRefresh.setOnRefreshListener {
+            adapter.clear()
+            adapter.notifyDataSetChanged()
+            vm.getUsers()
+        }
+
     }
 
     private fun setUpListeners() {
@@ -64,6 +84,8 @@ class MainActivity : AppCompatActivity() {
         vm.namesListObserver.observe(this, Observer { it ->
             Log.d(TAG,it.toString())
             adapter.setData(it)
+            mProgress.visibility = View.GONE
+            mRefresh.isRefreshing = false
         })
 
         vm.mainScreenCommand.observe(this, Observer { it ->

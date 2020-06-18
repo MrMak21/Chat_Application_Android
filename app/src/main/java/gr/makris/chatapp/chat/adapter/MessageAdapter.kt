@@ -8,10 +8,12 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import gr.makris.chatapp.R
 import gr.makris.chatapp.data.Message
 import gr.makris.chatapp.utils.SharedPrefsUtils
@@ -27,9 +29,12 @@ class MessageAdapter(application: Context) : RecyclerView.Adapter<MessageAdapter
     private var listener: ((Message) -> Unit)? = null
     private val userId: String?
 
+    private var recipientImageUri: String = ""
+
     init {
         val prefs = SharedPrefsUtils.getPrefs(app)
         userId = prefs?.getString(SharedPrefsUtils.USER_ID,null)
+        recipientImageUri = prefs?.getString(SharedPrefsUtils.CHAT_RECIPIENT_IMAGE,"")!!
     }
 
     fun setOnItemClickListener(listener: ((Message) -> Unit)) {
@@ -65,6 +70,10 @@ class MessageAdapter(application: Context) : RecyclerView.Adapter<MessageAdapter
             holder.recipientView.visibility = View.VISIBLE
             holder.recipient_date.text = getDateTime(messagesList[position].timestamp)
             holder.recipient_msg.text = messagesList[position].message
+            //set the user image
+            Glide.with(app)
+                .load(recipientImageUri)
+                .into(holder.recipientImage)
         }
 
 
@@ -96,6 +105,8 @@ class MessageAdapter(application: Context) : RecyclerView.Adapter<MessageAdapter
 
         val sender_date = itemView.findViewById<TextView>(R.id.sender_recycler_date)
         val sender_msg = itemView.findViewById<TextView>(R.id.sender_recycler_message)
+
+        val recipientImage = itemView.findViewById<ImageView>(R.id.chat_userImage)
     }
 
     private fun getDateTime(s: String): String? {
